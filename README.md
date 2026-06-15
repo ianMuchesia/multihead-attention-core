@@ -10,7 +10,7 @@ This repository explores the internal mechanics, memory bottlenecks, and computa
 
 - **`src/`**: Contains the core `MultiHeadAttention` PyTorch implementation.
 - **`tests/`**: Unit tests verifying correct tensor transformations and layer projection shapes.
-- **`experiments/`**: Scripts measuring parameter counts and memory scaling requirements.
+- **`experiments/`**: Scripts and data measuring parameter counts, tracking training execution times, and analyzing memory scaling bottlenecks (see [`complexity_comparison.md`](experiments/complexity_comparison.md)).
 - **`math-notes/`**: Explanations detailing memory analysis, parameter counting, and Big-O computational complexity ($\mathcal{O}(n^2d)$).
 
 ## Status
