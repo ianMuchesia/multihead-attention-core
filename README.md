@@ -1,26 +1,27 @@
 # Multi-Head Attention Core
 
-A PyTorch implementation and mathematical analysis of the Multi-Head Attention mechanism, the foundational component of Transformer neural networks.
+PyTorch implementation and analysis of the Multi-Head Attention mechanism used in Transformer models.
 
-## Overview
+## Highlights
 
-This repository explores the internal mechanics, memory bottlenecks, and computational complexity of multi-head attention. It includes a custom PyTorch module, rigorous shape-checking tests, and theoretical derivations, providing a clear bridge between theory and implementation.
+- Core attention module with query, key, value, and output projections.
+- Shape-focused tests for validating tensor transformations.
+- Experiment scripts and generated artifacts for memory, speed, and attention-map analysis.
+- Professional math notes covering memory scaling, parameter counts, and $\mathcal{O}(n^2d)$ complexity.
 
 ## Project Structure
 
-- **`src/`**: Contains the core `MultiHeadAttention` PyTorch implementation.
-- **`tests/`**: Unit tests verifying correct tensor transformations and layer projection shapes.
-- **`experiments/`**: Scripts and data measuring parameter counts, tracking training execution times, and analyzing memory scaling bottlenecks (see [`complexity_comparison.md`](experiments/complexity_comparison.md)).
-- **`math-notes/`**: Explanations detailing memory analysis, parameter counting, and Big-O computational complexity ($\mathcal{O}(n^2d)$).
+- `src/` - Core model code and experiment runners.
+- `tests/` - Unit tests for tensor shapes and attention behavior.
+- `experiments/` - Training outputs, checkpoints, plots, and experiment summaries.
+- `math-notes/` - Clean technical notes and complexity analysis.
 
-## Status
+## Current State
 
-**Work in Progress (WIP)**: The core implementation for query/key/value projection mappings and head splitting is established. Attention scaling and masked dot-product operations are currently being developed.
+This repository is in an active research stage. The attention block is implemented, the experiment pipeline is producing comparison data, and the repository now includes saved plots and checkpoints for the tested head configurations.
 
-## Setup & Testing
+## Run Tests
 
 ```bash
-git clone https://github.com/ianMuchesia/multihead-attention-core.git
-cd multihead-attention-core
 pytest tests/
 ```

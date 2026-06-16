@@ -64,6 +64,9 @@ class MultiHeadAttention(nn.Module):
         
         
         weights =  torch.softmax(scores,dim=-1)
+        
+        
+        #print(f"this is the shape of weights: { weights.shape}")
     
         outputs = weights @ V
         
