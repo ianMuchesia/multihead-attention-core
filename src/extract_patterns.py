@@ -113,7 +113,7 @@ for num_heads in heads_to_test:
         sns.heatmap(head_matrix, 
                     cmap='viridis', 
                     # 3. Use an accurate label for attention weights (0.0 to 1.0)
-                    cbar_kws={'label': f'GPU Attention Weight (Probability)- head {i} of {num_heads} heads'})
+                    cbar_kws={'label': f'GPU Attention Weight (Probability)- head {i+1} of {num_heads} heads'})
 
         # 4. Apply RIGOROUS, accurate professional labels
         plt.title("GPU Attention Alignment Heatmap (Multiple Heads)", fontsize=16, pad=20)

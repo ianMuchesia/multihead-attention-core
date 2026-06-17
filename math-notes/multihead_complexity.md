@@ -1,25 +1,39 @@
 # Multi-Head Attention Complexity & Scaling Analysis
 
-## 1. Memory Analysis (Attention Matrix Scaling)
-**The Bottleneck:** The attention mechanism calculates how much every word relates to every other word in the sequence. This creates an $n \times n$ attention matrix (where $n$ is the sequence length).
+## Overview
+This note summarizes the two main costs of multi-head attention: quadratic memory growth in sequence length and linear work per attention score with respect to embedding dimension.
 
-**Proof (Batch = 32, Seq = 20):**
-- **1 Head:** The weights tensor shape is `(32, 1, 20, 20)`. Total elements stored in memory = $12,800$.
-- **8 Heads:** The weights tensor shape is `(32, 8, 20, 20)`. Total elements stored in memory = $102,400$.
+## 1. Memory Analysis
+The bottleneck is the attention matrix, which compares every token with every other token in the sequence. For a sequence of length $n$, the attention map has shape $n \times n$.
 
-**Takeaway:** Adding heads massively multiplies the RAM required to store attention maps. This is the primary reason why scaling context windows in Large Language Models (LLMs) is highly memory-intensive.
+For the reference batch below:
+- Batch size = 32
+- Sequence length = 20
 
-## 2. Parameter Counting ($d_{model} = 128$, heads = 4)
-**Single Linear Layer ($W_Q$):**
-- **Weight matrix**: 128 input neurons connected to 128 output neurons = $16,384$ connections.
-- **Bias vector**: 1 adjustable unit added to each of the 128 outputs = $128$.
-- **Total per layer**: $16,384 + 128 = 16,512$ parameters.
+The attention weights tensor has shape:
+- 1 head: `(32, 1, 20, 20)` with $12,800$ stored values
+- 8 heads: `(32, 8, 20, 20)` with $102,400$ stored values
 
-**Multi-Head Block Total:**
-- The architecture features exactly four projection layers: $W_Q, W_K, W_V,$ and $W_O$.
-- **Total parameters**: $16,512 \times 4 = 66,048$.
+This shows why increasing the number of heads raises memory pressure: the attention map grows with both sequence length and head count.
 
-## 3. Computational Complexity: $\mathcal{O}(n^2d)$
-- **The Output Grid ($n^2$):** Multiplying the Query matrix $Q$ and the transposed Key matrix $K^T$ results in an $n \times n$ matrix. There are $n^2$ total cells to compute.
-- **The Work Per Cell ($d$):** To calculate a single cell, we perform a dot product between a row from $Q$ and a column from $K^T$. Since the sequence representations use embedding dimension $d$, taking the dot product requires $d$ individual multiplications.
-- **Total Computational Work:** $(\text{Total cells}) \times (\text{Multiplications per cell}) = n^2 \times d$.
+## 2. Parameter Counting
+For $d_{model} = 128$ and 4 heads, each projection layer contains:
+- Weight matrix: $128 \times 128 = 16,384$ parameters
+- Bias vector: $128$ parameters
+- Total per layer: $16,512$ parameters
+
+The full block uses four learned projections: $W_Q$, $W_K$, $W_V$, and $W_O$.
+
+Total parameters:
+$$16,512 \times 4 = 66,048$$
+
+## 3. Computational Complexity
+The attention score matrix is formed by multiplying $Q$ by $K^T$. That produces $n^2$ output cells.
+
+Each cell is a dot product across $d$ dimensions, so the cost per cell is proportional to $d$.
+
+Therefore, the total work is:
+$$\mathcal{O}(n^2 d)$$
+
+## Interpretation
+The quadratic term comes from comparing every token to every other token. The linear $d$ term comes from the size of each token representation used in the dot product.
